@@ -142,25 +142,27 @@ export default function ChatWidget() {
     window.location.search.includes('open=1') ||
     window !== window.top
   );
-  const [isOpen, setIsOpen] = useState(isEmbedded);
+  const [isOpen, setIsOpen] = useState(true);
   const [lang, setLang] = useState<'en' | 'bn'>('en'); // Primary English
   const [activeFloatingProduct, setActiveFloatingProduct] = useState<ProductCardData | null>(null);
 
   const handleClose = () => {
-    setIsOpen(false);
     if (typeof window !== 'undefined' && window.parent && window.parent !== window) {
       window.parent.postMessage({ type: 'TOWA_CHAT_CLOSE' }, '*');
+    }
+    if (!isEmbedded) {
+      setIsOpen(false);
     }
   };
 
   useEffect(() => {
     const handleMsg = (e: MessageEvent) => {
       if (e.data?.type === 'TOWA_CHAT_OPEN') setIsOpen(true);
-      if (e.data?.type === 'TOWA_CHAT_CLOSE') setIsOpen(false);
+      if (e.data?.type === 'TOWA_CHAT_CLOSE' && !isEmbedded) setIsOpen(false);
     };
     window.addEventListener('message', handleMsg);
     return () => window.removeEventListener('message', handleMsg);
-  }, []);
+  }, [isEmbedded]);
 
   const getWelcomeMessage = (l: 'en' | 'bn') =>
     l === 'en'
@@ -431,7 +433,7 @@ export default function ChatWidget() {
       )}
 
       {/* 2. Main Chat Window: 100% Mobile Responsive */}
-      {isOpen && (
+      {(isOpen || isEmbedded) && (
         <div
           className={
             isEmbedded
