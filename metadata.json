@@ -1,0 +1,8 @@
+{
+  "name": "Towa Customer Support",
+  "description": "AI-powered customer support chat widget for Towa Store.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

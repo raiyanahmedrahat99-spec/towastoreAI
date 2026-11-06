@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <circle cx="256" cy="256" r="230" fill="#E8F8EE"/>
+  <!-- Wi-Fi Signals -->
+  <path d="M190 145 C230 105 285 105 325 145" stroke="#22C55E" stroke-width="26" stroke-linecap="round"/>
+  <path d="M210 185 C235 155 280 155 305 185" stroke="#4ADE80" stroke-width="24" stroke-linecap="round"/>
+  <circle cx="258" cy="225" r="16" fill="#22C55E"/>
+  <!-- Cart Basket Body -->
+  <path d="M160 170 L195 320 C198 335 212 345 228 345 L380 345 C395 345 408 333 410 318 L430 195 C432 180 420 170 405 170 Z" fill="#16A34A" stroke="#0F2942" stroke-width="20" stroke-linejoin="round"/>
+  <!-- Cart Grid Pattern -->
+  <path d="M200 215 L420 215 M205 260 L415 260 M210 305 L400 305" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+  <path d="M240 180 L240 335 M290 180 L290 335 M340 180 L340 335 M390 180 L390 335" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round"/>
+  <!-- Cart Handle -->
+  <path d="M120 140 C105 140 95 150 95 165 C95 180 108 190 125 190 L160 190 L195 340" stroke="#0F2942" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Tag -->
+  <g transform="translate(115, 195) rotate(-15)">
+    <path d="M10 20 L40 5 C45 2 52 5 55 10 L75 50 C78 55 75 62 70 65 L40 80 C35 83 28 80 25 75 L5 35 C2 30 5 23 10 20 Z" fill="#84CC16" stroke="#0F2942" stroke-width="6"/>
+    <circle cx="25" cy="30" r="5" fill="#FFFFFF"/>
+  </g>
+  <!-- Base Chassis & Wheels -->
+  <path d="M200 380 L390 380" stroke="#0F2942" stroke-width="18" stroke-linecap="round"/>
+  <circle cx="220" cy="385" r="38" fill="#15803D" stroke="#0F2942" stroke-width="18"/>
+  <circle cx="220" cy="385" r="16" fill="#86EFAC"/>
+  <circle cx="375" cy="385" r="38" fill="#15803D" stroke="#0F2942" stroke-width="18"/>
+  <circle cx="375" cy="385" r="16" fill="#86EFAC"/>
+  <!-- Motion Bubbles -->
+  <circle cx="125" cy="330" r="12" fill="#86EFAC"/>
+  <circle cx="150" cy="360" r="14" fill="#4ADE80"/>
+  <circle cx="170" cy="385" r="10" fill="#22C55E"/>
+  <circle cx="130" cy="370" r="8" fill="#86EFAC"/>
+  <!-- Ground Swoosh -->
+  <path d="M130 420 Q260 480 470 400" stroke="#15803D" stroke-width="16" stroke-linecap="round"/>
+</svg>
