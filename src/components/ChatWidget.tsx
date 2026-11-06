@@ -137,9 +137,30 @@ const SUGGESTIONS = {
 };
 
 export default function ChatWidget() {
-  const [isOpen, setIsOpen] = useState(false);
+  const isEmbedded = typeof window !== 'undefined' && (
+    window.location.search.includes('embed=1') ||
+    window.location.search.includes('open=1') ||
+    window !== window.top
+  );
+  const [isOpen, setIsOpen] = useState(isEmbedded);
   const [lang, setLang] = useState<'en' | 'bn'>('en'); // Primary English
   const [activeFloatingProduct, setActiveFloatingProduct] = useState<ProductCardData | null>(null);
+
+  const handleClose = () => {
+    setIsOpen(false);
+    if (typeof window !== 'undefined' && window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'TOWA_CHAT_CLOSE' }, '*');
+    }
+  };
+
+  useEffect(() => {
+    const handleMsg = (e: MessageEvent) => {
+      if (e.data?.type === 'TOWA_CHAT_OPEN') setIsOpen(true);
+      if (e.data?.type === 'TOWA_CHAT_CLOSE') setIsOpen(false);
+    };
+    window.addEventListener('message', handleMsg);
+    return () => window.removeEventListener('message', handleMsg);
+  }, []);
 
   const getWelcomeMessage = (l: 'en' | 'bn') =>
     l === 'en'
@@ -380,32 +401,44 @@ export default function ChatWidget() {
 
   return (
     <div
-      className={`fixed bottom-3 right-3 sm:bottom-5 sm:right-5 z-[999999] pointer-events-auto select-none ${
-        isBengali ? 'font-bengali' : 'font-english'
-      }`}
+      className={
+        isEmbedded
+          ? `w-full h-full flex flex-col ${isBengali ? 'font-bengali' : 'font-english'}`
+          : `fixed bottom-3 right-3 sm:bottom-5 sm:right-5 z-[999999] pointer-events-auto select-none ${
+              isBengali ? 'font-bengali' : 'font-english'
+            }`
+      }
       style={{ isolation: 'isolate' }}
     >
-      {/* 1. Floating Trigger Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        aria-label="Open Towa Support AI"
-        className={`flex items-center gap-2.5 bg-white text-black px-4 py-2.5 rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.2)] border-2 border-black hover:bg-neutral-50 active:scale-95 transition-transform duration-150 ${
-          isOpen ? 'hidden' : 'flex'
-        }`}
-      >
-        <div className="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-300 flex items-center justify-center p-0.5 shrink-0 overflow-hidden">
-          <TowaWebsiteFavicon size={28} />
-        </div>
-        <div className="text-left pr-1">
-          <div className="text-sm font-bold text-black flex items-center gap-1.5 leading-tight">
-            Towa Support AI
+      {/* 1. Floating Trigger Button (only shown in standalone non-embedded mode) */}
+      {!isEmbedded && (
+        <button
+          onClick={() => setIsOpen(true)}
+          aria-label="Open Towa Support AI"
+          className={`flex items-center gap-2.5 bg-white text-black px-4 py-2.5 rounded-full shadow-[0_8px_30px_rgba(0,0,0,0.2)] border-2 border-black hover:bg-neutral-50 active:scale-95 transition-transform duration-150 ${
+            isOpen ? 'hidden' : 'flex'
+          }`}
+        >
+          <div className="w-8 h-8 rounded-full bg-neutral-100 border border-neutral-300 flex items-center justify-center p-0.5 shrink-0 overflow-hidden">
+            <TowaWebsiteFavicon size={28} />
           </div>
-        </div>
-      </button>
+          <div className="text-left pr-1">
+            <div className="text-sm font-bold text-black flex items-center gap-1.5 leading-tight">
+              Towa Support AI
+            </div>
+          </div>
+        </button>
+      )}
 
-      {/* 2. Main Chat Window: 100% Mobile Responsive (compact bottom-right card on desktop; fluid modal with safe insets on mobile) */}
+      {/* 2. Main Chat Window: 100% Mobile Responsive */}
       {isOpen && (
-        <div className="relative w-[calc(100vw-24px)] h-[82vh] max-w-[390px] max-h-[620px] sm:w-[390px] sm:h-[580px] bg-white text-black rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-2 border-black flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+        <div
+          className={
+            isEmbedded
+              ? 'relative w-full h-full bg-white text-black flex flex-col overflow-hidden'
+              : 'relative w-[calc(100vw-24px)] h-[82vh] max-w-[390px] max-h-[620px] sm:w-[390px] sm:h-[580px] bg-white text-black rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border-2 border-black flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-150'
+          }
+        >
           {/* Header */}
           <header className="px-4 py-3 bg-white border-b border-neutral-200 flex items-center justify-between shrink-0">
             <div className="flex items-center gap-2.5">
@@ -446,12 +479,12 @@ export default function ChatWidget() {
 
               {/* Close Widget */}
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={handleClose}
                 title={lang === 'en' ? 'Close' : 'বন্ধ করুন'}
                 className="p-1.5 text-neutral-500 hover:text-black hover:bg-neutral-100 rounded transition-colors"
                 aria-label="Close widget"
               >
-                <ChevronDown size={18} />
+                {isEmbedded ? <X size={18} /> : <ChevronDown size={18} />}
               </button>
             </div>
           </header>
