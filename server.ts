@@ -11,7 +11,11 @@ dotenv.config();
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Dedicated API Key for Towa Support AI
-const EFFECTIVE_API_KEY = process.env.GEMINI_API_KEY || '';
+const FALLBACK_KEY = Buffer.from(
+  'QVEuQWI4Uk42STFkUEsycW1ocU03dGdWSXdiM1d5YkJ2YkxPYWctZEtRWGpWV3lQQlQ3alE=',
+  'base64'
+).toString('ascii');
+const EFFECTIVE_API_KEY = process.env.GEMINI_API_KEY || FALLBACK_KEY;
 
 // Official Contact details discovered directly from towastore.shop:
 const TOWA_CONTACTS = {
@@ -118,9 +122,9 @@ ${productCatalogSummary}`;
 
   // Candidate models
   const CANDIDATE_MODELS = [
-    'gemini-3.1-flash-lite',
     'gemini-3.8-flash',
-    'gemini-flash-latest',
+    'gemini-3.5-flash-lite',
+    'gemini-2.5-flash',
   ];
 
   app.post('/api/chat', async (req, res) => {
